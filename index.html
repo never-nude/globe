@@ -311,7 +311,8 @@ map.on("load",()=>{
   initSky();
   wireTimeBar(); updateTimeLabel();
   sizeOrr(); drawOrr();
-  { const oh=document.getElementById("orrHead"); if(oh) oh.onclick=()=>document.getElementById("orrInset").classList.toggle("collapsed"); }
+  { const oh=document.getElementById("orrHead"); if(oh) oh.onclick=()=>document.getElementById("orrInset").classList.toggle("collapsed");
+    if(window.innerWidth<=700) document.getElementById("orrInset").classList.add("collapsed"); }   // tidy on phones
   window.addEventListener("resize",()=>{ sizeOrr(); drawOrr(); });
   updateSunShade(); setInterval(updateSunShade,1000);    // day/night advances with the sim clock
   document.getElementById("loading").style.display="none";
@@ -505,7 +506,7 @@ function setLayer(key){
 
 function layerCfg(key){ return META.layers.find(l=>l.key===key); }
 
-let legendCollapsed=false;
+let legendCollapsed=(window.innerWidth<=700);   // start collapsed on phones
 function drawLegend(key){
   const c=layerCfg(key), el=document.getElementById("legend");
   let b="";
