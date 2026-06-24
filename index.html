@@ -320,7 +320,7 @@ map.on("load",()=>{
 
 /* ---- idle auto-rotation ---- */
 let lastInteract=0, panelOpen=false, solarOpen=false;
-["mousedown","wheel","dragstart","touchstart"].forEach(ev=>map.on(ev,()=>{lastInteract=Date.now();}));
+["mousedown","wheel","dragstart","dragend","touchstart","touchend","touchmove","rotate","pitch"].forEach(ev=>map.on(ev,()=>{lastInteract=Date.now();}));
 const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 function fmtSim(d){ const y=d.getUTCFullYear(), era=y<=0?"BCE":"CE", yy=y<=0?(1-y):y;
   const hh=String(d.getUTCHours()).padStart(2,"0"), mm=String(d.getUTCMinutes()).padStart(2,"0");
@@ -377,8 +377,8 @@ function startSpin(){
       simDays += dt*(simSpeed/60);                                  // simSpeed = sim-days per real minute
       solarDate=new Date(simEpoch + simDays*86400000);
       updateTimeLabel();
-      // Earth always spins while the clock is playing — only the user's own drag pauses it
-      if(!subOn && !dragging){
+      // Earth drifts when idle; the moment you touch it, it holds still so you can rotate freely
+      if(!subOn && !dragging && (Date.now()-lastInteract>2000)){
         const c=map.getCenter(); c.lng=((c.lng - (simSpeed/60)*360*dt + 540)%360)-180; map.setCenter(c);
       }
     }
